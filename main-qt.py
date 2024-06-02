@@ -7,8 +7,8 @@ from PyQt6.QtWidgets import (
                             QGridLayout,
                             QVBoxLayout,
                             QHBoxLayout,
+                            QWidget,
                             QLabel, 
-                            QWidget, 
                             QPushButton
                             )
 ## Constants
@@ -20,15 +20,17 @@ def loadItems():
 
 class itemSelect(QMainWindow):
     def __init__(self):
-        super().__init__()
+        super(itemSelect, self).__init__()
         self.setWindowTitle("SIMple Inventory Manager")
         self.setFixedSize(WINDOW_SIZE, WINDOW_SIZE)
         self.generalLayout = QVBoxLayout()
         centralWidget = QWidget(self)
         centralWidget.setLayout(self.generalLayout)
         self.setCentralWidget(centralWidget)
+        # Load internal Widgets
         self._topMenu()
         self._getItems()
+
     
     def _topMenu(self):
         BUTTON_HEIGHT = 75
@@ -55,6 +57,7 @@ class itemSelect(QMainWindow):
             self.buttonGrid[item] = QPushButton(f"{item}")
             self.buttonGrid[item].setFixedSize(BUTTON_WIDTH, BUTTON_HEIGHT)
             button_layout.addWidget(self.buttonGrid[item], row, col)
+            self.buttonGrid[item].clicked.connect(itemEditor(item).show)
             if col == 2:
                 col = 0
                 row += 1
@@ -63,15 +66,18 @@ class itemSelect(QMainWindow):
         self.generalLayout.addLayout(button_layout)
 
 
-class itemEditor(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("SIMple Inventory Manager")
+class itemEditor(QWidget):
+    def __init__(self, item):
+        super(itemEditor, self).__init__()
+        self.setWindowTitle(f"Editing {item}")
         self.setFixedSize(WINDOW_SIZE, WINDOW_SIZE)
+
         self.generalLayout = QVBoxLayout()
         centralWidget = QWidget(self)
         centralWidget.setLayout(self.generalLayout)
-        self.setCentralWidget(centralWidget)
+        
+        self.itemEditing = QLabel(self)
+        self.itemEditing.setText(item)
 
         self. _createNumberButtons()
 
@@ -84,6 +90,7 @@ class itemEditor(QMainWindow):
         self.generalLayout.addWidget(self.display)
 
     def _createNumberButtons(self):
+        BUTTON_SIZE = 40
         self.buttonMap = {}
         number_pad = QGridLayout()
         keyboard = [
