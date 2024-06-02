@@ -27,7 +27,20 @@ class itemSelect(QMainWindow):
         centralWidget = QWidget(self)
         centralWidget.setLayout(self.generalLayout)
         self.setCentralWidget(centralWidget)
+        self._topMenu()
         self._getItems()
+    
+    def _topMenu(self):
+        BUTTON_HEIGHT = 75
+        BUTTON_WIDTH = 200
+        buttons = ["Add/Remove Items", "Settings"]
+        self.topMenuButtonGrid = {}
+        topMenuButtonLayout = QHBoxLayout()
+        for button in buttons:
+            self.topMenuButtonGrid[button] = QPushButton(f"{button}")
+            self.topMenuButtonGrid[button].setFixedSize(BUTTON_WIDTH, BUTTON_HEIGHT)
+            topMenuButtonLayout.addWidget(self.topMenuButtonGrid[button])
+        self.generalLayout.addLayout(topMenuButtonLayout)
 
     def _getItems(self):
         COLUMNS = 3
@@ -36,16 +49,40 @@ class itemSelect(QMainWindow):
         self.buttonGrid = {}
         button_layout = QGridLayout()
         itemList = loadItems()
-        for col in range(0, COLUMNS):
-            for row, item in enumerate(itemList):
-                self.buttonGrid[item] = QPushButton(f"{item} - {row}, {col}")
-                self.buttonGrid[item].setFixedSize(BUTTON_WIDTH, BUTTON_HEIGHT)
-                button_layout.addWidget(self.buttonGrid[item], row, col)
+        col = 0
+        row = 0
+        for item in itemList:
+            self.buttonGrid[item] = QPushButton(f"{item}")
+            self.buttonGrid[item].setFixedSize(BUTTON_WIDTH, BUTTON_HEIGHT)
+            button_layout.addWidget(self.buttonGrid[item], row, col)
+            if col == 2:
+                col = 0
+                row += 1
+            else:
+                col += 1
         self.generalLayout.addLayout(button_layout)
 
 
 class itemEditor(QMainWindow):
-    
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("SIMple Inventory Manager")
+        self.setFixedSize(WINDOW_SIZE, WINDOW_SIZE)
+        self.generalLayout = QVBoxLayout()
+        centralWidget = QWidget(self)
+        centralWidget.setLayout(self.generalLayout)
+        self.setCentralWidget(centralWidget)
+
+        self. _createNumberButtons()
+
+    def _createDisplay(self):
+        DISPLAY_HEIGHT = 45
+        self.display = QLineEdit()
+        self.display.setFixedHeight(DISPLAY_HEIGHT)
+        self.display.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.display.setReadOnly(False)
+        self.generalLayout.addWidget(self.display)
+
     def _createNumberButtons(self):
         self.buttonMap = {}
         number_pad = QGridLayout()
