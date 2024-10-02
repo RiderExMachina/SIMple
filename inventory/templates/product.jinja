@@ -59,8 +59,10 @@
                                 </select></td>
                             </tr>
                             </table>
+                        <a href="javascript:enable_advanced('create')" id="advanced-items-toggle-create">Advanced Items ▼</a>
+
                         </div>
-                        <div id="extra-options" class="modal-body"></div>
+                        <div id="extra-options-create" class="modal-body"></div>
                         <div class="modal-footer">
                             <span id="modal-disclaimer">Items marked with asterisk (<span class="required">*</span>) are required</span>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -93,8 +95,26 @@
                 {% set been_reordered = product[9] %}
                 {% set vendor         = product[10] %}
                 {% set vendor_url     = product[11] %}
-                {# set purchase_cost  = product[12]|float #}
-                {# set sale_price     = product[13]|float #}
+                {% set purchase_cost  = product[12] %}
+                {% set sale_price     = product[13] %}
+
+                {# Data Validation -- pretty sure this can/should be done server-side #}
+                {% if not vendor %}
+                    {% set vendor = "" %}
+                {% endif %}
+                {% if not vendor_url %}
+                    {% set vendor_url = "" %}
+                {% endif %}
+                {% if not purchase_cost %}
+                    {% set purchase_cost = "" %}
+                {% else %}
+                    {% set purchase_cost = purchase_cost|float %}
+                {% endif %}
+                {% if not sale_price %}
+                    {% set sale_price = "" %}
+                {% else %}
+                    {% set sale_price = sale_price|float %}
+                {% endif %}
 
                 {% set need_reordered = "No" %}
                 {% if prod_qty < min_qty %}
@@ -164,6 +184,10 @@
                                             </select></td>
                                         </tr>
                                         </table>
+                                        <a href="javascript:enable_advanced({{ [prod_id, vendor, vendor_url, purchase_cost, sale_price] }})" id="advanced-items-toggle-{{ prod_id }}">Advanced Items ▼</a>
+
+                        </div>
+                        <div id="extra-options-{{prod_id}}" class="modal-body"></div>
                                     <div class="modal-footer">
                                         <input name="prod_id" value="{{ prod_id }}" hidden aria-hidden="true">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
