@@ -134,10 +134,10 @@ def product():
             for num_validation in [quantity, quick_take_qty, reorder_qty, restock_qty]:
                 if num_validation < 0:
                     transaction_allowed = False
-                return render_template(
-                    'modal.jinja',
-                    transaction_message=f"Please do not enter negative numbers."
-                )
+                    return render_template(
+                        'modal.jinja',
+                        transaction_message=f"Please do not enter negative numbers."
+                    )
 
             if transaction_allowed:
                 conn.execute(
@@ -411,12 +411,17 @@ def edit():
                             request.form["categories"]
                             )
                 ## Validate Data
-                for to_check in [prod_name, prod_quantity, quick_take_qty, reorder_qty, restock_qty, location]:
+                for to_check in [prod_quantity, quick_take_qty, reorder_qty, restock_qty]:
                     if to_check not in EMPTY_SYMBOLS:
                         try:
-                            int(to_check)
+                            if int(to_check) < 0:
+                                return render_template(
+                                    'modal.jinja',
+                                    transaction_message=f"Please do not enter negative numbers."
+                            )
                         except ValueError:
                             print("Expected integer, did not recieve one.")
+                        
 
                 if prod_name:
                     conn.execute(
