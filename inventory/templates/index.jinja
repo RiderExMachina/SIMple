@@ -45,15 +45,14 @@
                         {% set reorder_toggle = 1 %}
                     {% elif been_reordered == 1 %}
                         {% set need_reordered = "Reorder In Process" %}
-                        {# set reorder_icon = "<img name='reorder' id='reorder-icon' src=" + url_for('static', filename='reorder.png') +"><br>" #}
-                        {% set reorder_icon = "^" %}
+                        {% set reorder_icon = "<img name='reorder' id='reorder-icon' src=" + url_for('static', filename='reordered.png') +">" %}
                         {% set reorder_toggle = 0 %}
                         {% set restock_toggle = 1 %}
                     {% endif %}
                 {% endif %}
 
 
-                <button class="btn item-btn {{ state }}" id="btn-{{prod_id}}" data-toggle="modal" data-target="#edit_{{ prod_id }}">{{ reorder_icon }}{{ prod_name }}<br/> ({{ prod_qty }})</button>
+                <button class="btn item-btn {{ state }}" id="btn-{{prod_id}}" data-toggle="modal" data-target="#edit_{{ prod_id }}">{{ prod_name }}<br/> ({{ prod_qty }})<br>{{ reorder_icon }}</button>
 
                 <div id="edit_{{ prod_id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="trans_message" aria-hidden="true">
                 <div class="modal-dialog" role="document">
