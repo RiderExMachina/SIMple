@@ -108,21 +108,33 @@ def product():
             restock_qty,
             location,
             categories) = (
-                        ["Product Name", "prod_name", request.form["prod_name"]],
-                        ["Product UPC", "prod_upc", request.form["prod_upc"]],
-                        ["Product Quantity", "prod_quantity", request.form["prod_quantity"]],
-                        ["Product Quick Take", "quick_take_qty", request.form["quick_take_qty"]],
-                        ["Minimum Quantity", "reorder_qty", request.form["reorder_qty"]],
-                        ["Restock Quantity", "restock_qty", request.form["restock_qty"]],
-                        ["Location", "location", request.form["location"]],
-                        ["Categories", "categories", request.form["categories"]]
+                        request.form["prod_name"],
+                        request.form["prod_upc"],
+                        request.form["prod_quantity"],
+                        request.form["quick_take_qty"],
+                        request.form["reorder_qty"],
+                        request.form["restock_qty"],
+                        request.form["location"],
+                        request.form["categories"]
                         )
             ## Verify Data
             transaction_allowed = True
-            for to_check in [prod_name, prod_upc, quantity, quick_take_qty, reorder_qty, restock_qty, location]:
-                if to_check in EMPTY_SYMBOLS:
+            for value in [prod_name, prod_upc, prod_quantity, quick_take_qty, reorder_qty, restock_qty, location]:
+                if value in EMPTY_SYMBOLS:
                     transaction_allowed = False
-            for num_validation in [quantity, quick_take_qty, reorder_qty, restock_qty]:
+                    error_type = "Required Field Left Empty"
+                    return render_template(
+                                    'modal.jinja',
+                                    link=VIEWS,
+                                    error_code=error_type,
+                                    transaction_message=f"Unable to set required field, {name}",
+                                    previous=VIEWS["Stock"]
+                                )
+            prod_quantity = int(prod_quantity)
+            quick_take_qty = int(quick_take_qty)
+            reorder_qty = int(reorder_qty)
+            restock_qty = int(restock_qty)
+            for num_validation in [prod_quantity, quick_take_qty, reorder_qty, restock_qty]:
                 if num_validation < 0:
                     transaction_allowed = False
                     error_type = "Negative Values"
@@ -130,14 +142,14 @@ def product():
                                     'modal.jinja',
                                     link=VIEWS,
                                     error_code=error_type,
-                                    transaction_message=f"Unable to change {name}. Value '{value}' is invalid.",
+                                    transaction_message=f"Unable to set {name}. Value '{value}' is invalid.",
                                     previous=VIEWS["Stock"]
                                 )
 
             if transaction_allowed:
                 conn.execute(
                     "INSERT INTO products (prod_name, prod_upc, prod_quantity, quick_take_qty, reorder_qty, restock_qty, location, categories) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    (prod_name, prod_upc, quantity, quick_take_qty, reorder_qty, restock_qty, location, categories),
+                    (prod_name, prod_upc, prod_quantity, quick_take_qty, reorder_qty, restock_qty, location, categories),
                 )
                 return redirect(VIEWS["Stock"])
 
