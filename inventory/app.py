@@ -371,7 +371,7 @@ def quick_change():
                 new_qty = old_prod_quantity + qty
                 update_qty(prod_id, new_qty)
             case "reorder":
-                get_state = conn.execute("SELECT been_reordered FROM products WHERE prod_id = ?", (prod_id)).fetchone
+                get_state = conn.execute("SELECT been_reordered FROM products WHERE prod_id = ?", (prod_id)).fetchone()[0]
                 if get_state == 1:
                     new_state = 0
                 elif get_state == 0:
