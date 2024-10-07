@@ -18,6 +18,8 @@ VIEWS = {
 }
 EMPTY_SYMBOLS = {"", " ", None}
 
+VERSION = "0.1.8"
+
 app = Flask(__name__)
 
 if os.environ.get("FLASK_DEBUG") == "1":
@@ -106,7 +108,6 @@ def summary():
         location = conn.execute("SELECT * FROM location").fetchall()
         if loc_filter:
             location_selected = 1
-            print(f"{loc_filter}, {type(loc_filter)}")
             products = conn.execute("SELECT * FROM products WHERE location = ? ORDER BY prod_name ASC", (str(loc_filter),)).fetchall()
             loc_name = conn.execute("SELECT loc_name FROM location WHERE loc_id = ?", (str(loc_filter),)).fetchone()[0]
         #Categories will likely be more difficult due to cross-table data
@@ -549,5 +550,14 @@ def set_filter():
 
     return redirect(VIEWS["Summary"])
 
+@app.route("/about", methods=["GET"])
+@app.route('/help', methods=["GET"])
+def help_page():
+    return render_template(
+        "about.jinja",
+        link=VIEWS,
+        title="SIMple Help",
+        version=VERSION
+        )
 with app.app_context():
     app.init_db()
