@@ -118,3 +118,12 @@ h5{
     width: 75px;
     margin: 2.5px;
 }
+
+.left{
+    float: right;
+    width: 50%;
+}
+.right{
+    float: left;
+    width: 50%;
+}
