@@ -15,13 +15,13 @@ $ flask --app inventory.app run --debug
 
 ```
 
-For more information, check out the [Installation Guide](../wiki/Installation-&-Quick-Start).
+For more information, check out the [Installation Guide](../../wiki/Installation-&-Quick-Start).
 
 ## Using SIMple
-See [Using Simple](../wiki/Using-SIMple) for a comprehensive breakdown and videos of use.
+See [Using Simple](../../wiki/Using-SIMple) for a comprehensive breakdown and videos of use.
 
 ## Developing or Deploying SIMple
-There is a comprehensive table of information at [Development & Production](../wiki/Development-&-Production).
+There is a comprehensive table of information at [Development & Production](../../wiki/Development-&-Production).
 
 ## Future
 See the Roadmap.
